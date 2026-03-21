@@ -127,7 +127,6 @@ const TVBanner: React.FC = () => {
               {[
                 "90+ Canales HD",
                 "Deportes en Vivo",
-                "Control Parental",
                 "Estrenos 24/7"
               ].map((item, i) => (
                 <div key={i} className="flex items-center space-x-4 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/10">
@@ -171,7 +170,7 @@ const TVBanner: React.FC = () => {
                   <div className="text-4xl font-black text-white leading-none tracking-tighter">HD</div>
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-4 flex items-center justify-center gap-2">
                     <span className="w-8 h-[1px] bg-gray-600" />
-                    Premium Experience
+                    Experiencia Premium
                     <span className="w-8 h-[1px] bg-gray-600" />
                   </div>
                 </div>

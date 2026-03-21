@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-brand-charcoal text-white pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16 border-b border-white/5 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-8 border-b border-white/5 pb-8">
 
           {/* Brand Panel */}
           <div className="lg:col-span-2">
@@ -94,7 +94,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-sm">
           <div>© {new Date().getFullYear()} Rapilink SAS. Todos los derechos reservados.</div>
           <div className="flex items-center space-x-4">
             <a href="http://clientes.portalinternet.io/saldo/rapilink-sas/" target="_blank" rel="noopener noreferrer" className="bg-brand-action/10 px-4 py-2 rounded-lg text-brand-action hover:bg-brand-action/20 transition-all font-bold">

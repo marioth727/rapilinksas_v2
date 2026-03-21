@@ -115,9 +115,9 @@ const Navbar: React.FC = () => {
               >
                 Pagar en línea
               </a>
-              <div className="flex items-center justify-center space-x-4 text-brand-dark pt-8">
-                <Phone size={20} /> <span className="font-semibold">604 444 0000</span>
-              </div>
+              <a href="tel:+573009121245" className="flex items-center justify-center space-x-4 text-brand-dark pt-8 hover:text-brand-blue transition-colors">
+                <Phone size={20} /> <span className="font-semibold">300 912 1245</span>
+              </a>
             </div>
           </motion.div>
         )}
