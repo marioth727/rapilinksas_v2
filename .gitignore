@@ -1,0 +1,17 @@
+.env
+.tmp/
+node_modules/
+dist/
+dist-ssr/
+*.local
+.DS_Store
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

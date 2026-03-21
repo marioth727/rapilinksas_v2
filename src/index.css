@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-dark: #1A3A5C;
+  --color-brand-blue: #0072CE;
+  --color-brand-tech: #00D1FF;
+  --color-brand-action: #0072CE;
+  --color-brand-hover: #00B4D8;
+  --color-brand-charcoal: #1A1A2E;
+  --color-brand-light: #F8FBFF;
+  
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Poppins", sans-serif;
+  
+  --radius-brand: 8px;
+
+  /* Escala Tipográfica Estándar (Basada en Stitch) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 3rem;
+  --text-5xl: 4rem;
+}
+
+@layer base {
+  body {
+    @apply text-brand-charcoal bg-white antialiased;
+    font-family: var(--font-sans);
+    font-size: var(--text-base); /* 16px Base */
+    line-height: 1.5;
+  }
+  
+  h1 { @apply font-display font-black tracking-tight leading-tight text-4xl md:text-5xl lg:text-6xl; }
+  h2 { @apply font-display font-bold tracking-tight leading-tight text-3xl md:text-4xl; }
+  h3 { @apply font-display font-bold text-xl md:text-2xl; }
+  p { @apply text-gray-500 text-base; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 bg-brand-action text-white rounded-brand font-semibold transition-all duration-300 hover:bg-brand-hover active:scale-95;
+  }
+  
+  .btn-outline {
+    @apply px-6 py-3 border-2 border-brand-action text-brand-action rounded-brand font-semibold transition-all duration-300 hover:bg-brand-action hover:text-white active:scale-95;
+  }
+  
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20;
+  }
+}
