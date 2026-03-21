@@ -11,10 +11,10 @@ const CoberturaSearch: React.FC = () => {
 
   // Filtrar sugerencias (máximo 5)
   const suggestions = query.length > 1 && !match
-    ? BarriosRapilink.filter(b => 
-        b.nombre.toLowerCase().includes(query.toLowerCase()) && 
-        b.nombre.toLowerCase() !== query.toLowerCase()
-      ).slice(0, 5)
+    ? BarriosRapilink.filter(b =>
+      b.nombre.toLowerCase().includes(query.toLowerCase()) &&
+      b.nombre.toLowerCase() !== query.toLowerCase()
+    ).slice(0, 5)
     : [];
 
   useEffect(() => {
@@ -51,54 +51,45 @@ const CoberturaSearch: React.FC = () => {
   }, []);
 
   return (
-    <section id="cobertura" className="py-24 bg-brand-light">
+    <section id="cobertura" className="py-24 bg-brand-light relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div 
+        {/* Tarjeta de Búsqueda Principal */}
+        <div
           className={`
-            relative bg-brand-dark rounded-[3rem] p-8 md:p-16 overflow-hidden shadow-2xl transition-all duration-700
-            ${match ? 'shadow-emerald-500/10 border-4 border-emerald-500/30' : 'border border-white/5'}
+            relative bg-white rounded-[2.5rem] p-10 md:p-16 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border transition-all duration-500 z-20
+            ${match ? 'border-green-500/30 shadow-green-500/10' : 'border-gray-100'}
           `}
           ref={dropdownRef}
         >
-          {/* Decoración dinámica */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue/10 rounded-full -mr-48 -mt-48 blur-3xl" />
-          <AnimatePresence>
-            {match && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-emerald-500/5 blur-3xl animate-pulse"
-              />
-            )}
-          </AnimatePresence>
-
-          <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto text-center">
+            {/* Pill Superior */}
             <div className={`
-              inline-flex items-center space-x-2 px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border transition-all
-              ${match ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-white/5 text-brand-tech border-white/5'}
+              inline-flex items-center space-x-2 px-5 py-2 rounded-full mb-8 font-bold text-xs uppercase tracking-widest transition-colors
+              ${match ? 'bg-green-100 text-green-700' : 'bg-blue-50 text-brand-blue'}
             `}>
-              <Navigation size={14} />
+              {match ? <CheckCircle2 size={14} /> : null}
               <span>{match ? 'Viabilidad Confirmada' : 'Cerca de ti'}</span>
             </div>
-            
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight leading-tight italic">
+
+            {/* Título Principal */}
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-brand-dark mb-6 tracking-tight">
               {match ? (
-                <>¡Llegamos a <span className="text-emerald-400">{match.nombre}!</span></>
+                <>¡Llegamos a <span className="text-green-600">{match.nombre}!</span></>
               ) : (
-                <>¿Llegamos a tu <span className="text-brand-tech">barrio?</span></>
+                <>¿Llegamos a tu <span className="text-brand-blue">barrio?</span></>
               )}
             </h2>
-            
-            <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
-              Consulta disponibilidad de nuestra de Fibra Óptica simétrica 
-              en <span className="text-white font-bold italic underline decoration-brand-tech underline-offset-8">Soledad.</span>
+
+            {/* Subtítulo */}
+            <p className="text-gray-500 text-lg md:text-xl mb-12 max-w-2xl mx-auto">
+              Consulta disponibilidad de nuestra red de Fibra Óptica en Soledad.
             </p>
 
-            <div className="max-w-xl mx-auto relative mb-10">
-              <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4 relative z-20">
-                <div className="relative flex-grow group">
-                  <MapPin className={`absolute left-5 top-1/2 -translate-y-1/2 transition-all ${match ? 'text-emerald-400 scale-110' : 'text-brand-tech'}`} size={20} />
+            {/* Formulario de Búsqueda */}
+            <div className="max-w-2xl mx-auto relative mb-12">
+              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-center gap-2 bg-gray-50/50 p-2 border border-gray-200 rounded-2xl relative z-20 focus-within:ring-4 focus-within:ring-brand-blue/10 focus-within:border-brand-blue/30 transition-all">
+                <div className="relative flex-grow w-full flex items-center px-4">
+                  <MapPin className={`transition-colors ${match ? 'text-green-500' : 'text-gray-400'}`} size={22} />
                   <input
                     type="text"
                     placeholder="Escribe tu barrio aquí..."
@@ -108,48 +99,47 @@ const CoberturaSearch: React.FC = () => {
                       setQuery(e.target.value);
                       setShowSuggestions(true);
                     }}
-                    className={`
-                      w-full bg-white/10 text-white border rounded-2xl py-5 pl-14 pr-6 focus:outline-none focus:ring-4 focus:bg-white/15 transition-all placeholder:text-gray-500 font-black text-lg
-                      ${match ? 'border-emerald-500/50 ring-emerald-500/20' : 'border-white/10 focus:ring-brand-tech/20'}
-                    `}
+                    className="w-full bg-transparent text-brand-dark py-4 pl-4 pr-4 focus:outline-none placeholder:text-gray-400 font-medium text-lg"
                   />
                   {match && (
-                    <CheckCircle2 className="absolute right-5 top-1/2 -translate-y-1/2 text-emerald-400 animate-bounce" size={24} />
+                    <CheckCircle2 className="text-green-500 animate-pulse ml-2" size={24} />
                   )}
                 </div>
-                
-                <button 
-                  type="submit" 
+
+                <button
+                  type="submit"
                   className={`
-                    flex items-center justify-center space-x-3 whitespace-nowrap px-10 py-5 rounded-2xl font-black transition-all shadow-xl text-sm uppercase tracking-widest group
-                    ${match 
-                      ? 'bg-emerald-500 text-white shadow-emerald-500/20 hover:bg-emerald-600 scale-105' 
-                      : 'bg-brand-tech text-brand-dark shadow-brand-tech/10 hover:bg-brand-blue hover:text-white'
+                    w-full sm:w-auto flex items-center justify-center space-x-2 px-10 py-4 rounded-xl font-bold transition-all text-white shadow-lg
+                    ${match
+                      ? 'bg-green-600 shadow-green-600/20 hover:bg-green-700'
+                      : 'bg-brand-blue shadow-brand-blue/20 hover:bg-blue-700'
                     }
                   `}
                 >
-                  <span>{match ? 'Solicitar Ahora' : 'Consultar'}</span>
-                  {match ? <ArrowRight size={18} className="translate-x-0 group-hover:translate-x-2 transition-transform" /> : <Search size={18} />}
+                  <span>{match ? 'SOLICITAR AHORA' : 'CONSULTAR'}</span>
                 </button>
               </form>
 
-              {/* Sugerencias Dropdown Home */}
+              {/* Sugerencias Dropdown */}
               <AnimatePresence>
                 {showSuggestions && suggestions.length > 0 && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute left-0 right-0 mt-2 bg-brand-charcoal border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-30 flex flex-col items-stretch"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute top-full left-0 right-0 mt-3 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden z-30"
                   >
                     {suggestions.map((b, i) => (
                       <button
                         key={i}
-                        onClick={() => handleSelect(b.nombre)}
-                        className="px-6 py-4 text-left hover:bg-brand-blue text-gray-300 hover:text-white flex items-center space-x-3 transition-colors group"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelect(b.nombre);
+                        }}
+                        className="w-full px-6 py-4 text-left hover:bg-gray-50 text-gray-700 flex items-center space-x-3 transition-colors border-b border-gray-50 last:border-0"
                       >
-                        <MapPin size={14} className="group-hover:text-brand-tech" />
-                        <span className="font-bold">{b.nombre}</span>
+                        <MapPin size={18} className="text-gray-400" />
+                        <span className="font-semibold text-lg">{b.nombre}</span>
                       </button>
                     ))}
                   </motion.div>
@@ -157,13 +147,43 @@ const CoberturaSearch: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-6">
-              {['Fibra 100% Simétrica'].map((text, i) => (
-                <div key={i} className="flex items-center space-x-2 text-xs font-black text-gray-400 uppercase tracking-widest px-4 py-2 border border-white/5 rounded-lg bg-white/5">
-                  <CheckCircle2 size={14} className="text-brand-tech" />
-                  <span>{text}</span>
-                </div>
-              ))}
+            {/* Pill Inferior */}
+            <div className="flex justify-center">
+              <div className="inline-flex items-center space-x-2 bg-gray-100/80 px-5 py-2.5 rounded-full text-[11px] font-black tracking-widest text-gray-500 uppercase">
+                <CheckCircle2 size={16} className="text-brand-blue" />
+                <span>100% Fibra Óptica</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sección Inferior Adicional: Conectividad de Alto Nivel */}
+        <div className="grid md:grid-cols-2 gap-8 mt-8">
+          {/* Texto */}
+          <div className="bg-gray-50 rounded-[2rem] p-10 flex flex-col justify-center">
+            <h3 className="text-2xl md:text-3xl font-bold text-brand-dark mb-4">
+              Conectividad de Alto Nivel
+            </h3>
+            <p className="text-gray-500 leading-relaxed text-lg">
+              Nuestra infraestructura está diseñada para soportar el crecimiento digital de Soledad, brindando estabilidad sin precedentes para gaming, streaming y teletrabajo.
+            </p>
+          </div>
+
+          {/* Imagen Servidores */}
+          <div className="relative rounded-[2rem] overflow-hidden min-h-[250px] shadow-lg">
+            <img
+              src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+              alt="Infraestructura de Servidores"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Overlay sutil */}
+            <div className="absolute inset-0 bg-brand-dark/40 mix-blend-multiply"></div>
+
+            {/* Pill Flotante en la imagen */}
+            <div className="absolute bottom-6 left-6">
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg text-xs font-bold text-brand-dark uppercase tracking-widest shadow-lg">
+                Infraestructura Propia
+              </div>
             </div>
           </div>
         </div>

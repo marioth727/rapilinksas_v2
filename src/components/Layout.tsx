@@ -17,7 +17,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       {/* Botón WhatsApp Flotante */}
       <a 
-        href="https://wa.me/573008255091" 
+        href={`https://wa.me/573008255091?text=${encodeURIComponent('Hola Rapilink! 👋 Deseo recibir información personalizada sobre sus planes de Fibra Óptica.')}`} 
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-8 right-8 z-[60] bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 group"

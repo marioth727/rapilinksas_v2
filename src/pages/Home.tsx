@@ -62,7 +62,7 @@ const Home: React.FC = () => {
               transition={{ delay: 0.6 }}
               className="flex flex-col sm:flex-row justify-center gap-4"
             >
-              <a href="#planes" className="btn-primary text-lg px-10 py-4 shadow-xl shadow-brand-action/25">Ver Planes Hogar</a>
+              <a href="#internet-hogar" className="btn-primary text-lg px-10 py-4 shadow-xl shadow-brand-action/25">Ver Planes Hogar</a>
               <a href="#contacto" className="btn-outline text-lg px-10 py-4 !text-white !border-white/40 hover:!bg-white hover:!text-brand-dark transition-all">Contactar Asesor</a>
             </motion.div>
           </div>

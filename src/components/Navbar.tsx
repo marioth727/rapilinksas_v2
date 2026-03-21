@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone } from 'lucide-react';
-import logoColor from '../assets/logo-color.png';
-import logoWhite from '../assets/logo-white.png';
+
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +26,7 @@ const Navbar: React.FC = () => {
     { name: 'PQRS', href: '/pqrs' },
   ];
 
-  const logoSizeClass = scrolled ? 'h-11 md:h-16' : 'h-14 md:h-24';
+  const logoSizeClass = scrolled ? 'h-10 md:h-16' : 'h-10 md:h-16';
   const isHome = location.pathname === '/';
 
   return (
@@ -38,7 +37,7 @@ const Navbar: React.FC = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src={scrolled || !isHome ? logoColor : logoWhite} 
+                src={scrolled || !isHome ? '/recursos/HEADER PNG.png' : '/recursos/LOGO RAPILINK S BLANCO.png'} 
                 alt="Rapilink Logo" 
                 className={`transition-all duration-300 object-contain ${logoSizeClass}`} 
               />

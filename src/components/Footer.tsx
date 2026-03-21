@@ -76,7 +76,7 @@ const Footer: React.FC = () => {
               <li className="flex items-center space-x-3 group">
                 <MessageSquare size={20} className="text-[#25D366] shrink-0" />
                 <a
-                  href="https://wa.me/573008255091"
+                  href={`https://wa.me/573008255091?text=${encodeURIComponent('Hola Rapilink! 👋 Deseo recibir información personalizada sobre sus planes de Fibra Óptica.')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
