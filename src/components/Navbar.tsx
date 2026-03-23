@@ -91,21 +91,33 @@ const Navbar: React.FC = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, x: 100 }}
+            initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 100 }}
-            className="fixed inset-0 bg-white z-40 flex flex-col pt-24 px-6 md:hidden overflow-y-auto pb-12"
+            exit={{ opacity: 0, x: '100%' }}
+            className="fixed inset-0 bg-white z-[60] flex flex-col p-6 md:hidden overflow-y-auto"
           >
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className="text-2xl font-display font-semibold text-brand-dark py-4 border-b border-gray-100"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
+            <div className="flex justify-between items-center mb-10 pb-4 border-b border-gray-100">
+               <Link to="/" onClick={() => setIsOpen(false)}>
+                 <img src="/recursos/HEADER PNG.png" alt="Rapilink Logo" className="h-10 object-contain" />
+               </Link>
+               <button onClick={() => setIsOpen(false)} className="text-brand-dark p-2">
+                 <X size={32} />
+               </button>
+            </div>
+
+            <div className="flex flex-col space-y-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-2xl font-display font-bold text-brand-dark py-4 hover:text-brand-blue transition-colors flex justify-between items-center"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.name}
+                  <div className="w-2 h-2 rounded-full bg-brand-blue/20" />
+                </Link>
+              ))}
+            </div>
             <div className="mt-8 space-y-4">
               <a 
                 href="https://clientes.portalinternet.io/saldo/rapilink-sas/"
