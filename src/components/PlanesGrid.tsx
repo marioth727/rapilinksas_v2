@@ -8,7 +8,8 @@ import {
   ShieldCheck, 
   PlayCircle,
   PlusCircle,
-  Zap
+  Zap,
+  Camera
 } from 'lucide-react';
 
 interface Plan {
@@ -54,9 +55,9 @@ const planes: Plan[] = [
     popular: false, 
     beneficios: [
       { texto: "Televisión Incluida", icon: Tv },
+      { texto: "Disney+ Incluido", icon: PlayCircle },
       { texto: "Descarga ilimitada", icon: Gauge },
-      { texto: "Wi-Fi 6", icon: Wifi },
-      { texto: "Ideal para Gaming 4K", icon: Zap }
+      { texto: "Wi-Fi 6", icon: Wifi }
     ] 
   },
   { 
@@ -66,9 +67,11 @@ const planes: Plan[] = [
     popular: false, 
     beneficios: [
       { texto: "Televisión Incluida", icon: Tv },
+      { texto: "Disney+ Incluido", icon: PlayCircle },
       { texto: "Descarga ilimitada", icon: Gauge },
-      { texto: "Wi-Fi 6", icon: Wifi },
-      { texto: "Máxima Velocidad Multi-dispositivo", icon: Zap }
+      { texto: "Cámara de Video", icon: Camera },
+      { texto: "Monitoreo de Hogar", icon: ShieldCheck },
+      { texto: "Wi-Fi 6", icon: Wifi }
     ] 
   },
 ];
@@ -89,7 +92,7 @@ const PlanesGrid: React.FC = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {planes.map((plan, index) => (
             <motion.div
               key={plan.nombre}
@@ -98,9 +101,9 @@ const PlanesGrid: React.FC = () => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               whileHover={{ scale: 1.02 }}
-              className={`relative p-8 rounded-[1.5rem] shadow-sm transition-all duration-300 min-h-[480px] flex flex-col ${
+              className={`relative p-8 rounded-[1.5rem] shadow-sm transition-all duration-300 min-h-[580px] h-full flex flex-col ${
                 plan.popular 
-                ? 'bg-[#1A3A5C] text-white ring-4 ring-[#0066CC]/10 md:scale-105 z-10 shadow-2xl' 
+                ? 'bg-[#1A3A5C] text-white ring-4 ring-[#0066CC]/10 md:scale-[1.05] z-10 shadow-2xl' 
                 : 'bg-[#F8FAFC] border border-gray-100 text-gray-800'
               }`}
             >
@@ -137,6 +140,13 @@ const PlanesGrid: React.FC = () => {
                       </div>
                       <span className={plan.popular ? 'text-gray-300' : 'text-gray-600'}>
                         {beneficio.texto}
+                        {beneficio.texto.includes('Disney+') && (
+                          <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" 
+                            alt="Disney+" 
+                            className={`inline-block h-3.5 ml-2 align-middle ${plan.popular ? 'brightness-[10]' : 'brightness-0 contrast-200'}`}
+                          />
+                        )}
                       </span>
                     </li>
                   ))}
