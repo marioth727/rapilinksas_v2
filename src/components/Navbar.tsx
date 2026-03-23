@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src={scrolled || !isHome ? '/recursos/HEADER PNG.png' : '/recursos/LOGO RAPILINK S BLANCO.png'} 
+                src={scrolled || !isHome || isOpen ? '/recursos/HEADER PNG.png' : '/recursos/LOGO RAPILINK S BLANCO.png'} 
                 alt="Rapilink Logo" 
                 className={`transition-all duration-300 object-contain ${logoSizeClass}`} 
               />
@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={scrolled || !isHome ? 'text-brand-dark' : 'text-white'}
+              className={scrolled || !isHome || isOpen ? 'text-brand-dark' : 'text-white'}
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
