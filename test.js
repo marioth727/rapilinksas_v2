@@ -1,4 +1,4 @@
-const apiKey = process.env.VITE_GEMINI_API_KEY || 'AIzaSyAgHAfYmLc08_rpkw5QE00WfaAPzYih_FA';
+const apiKey = process.env.VITE_GEMINI_API_KEY;
 
 async function testREST() {
    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {

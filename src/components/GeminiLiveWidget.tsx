@@ -47,17 +47,57 @@ export const GeminiLiveWidget: React.FC = () => {
     <div className="fixed bottom-6 right-6 z-50 font-sans">
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsOpen(true)}
-            className="w-16 h-16 rounded-full bg-brand-action text-white shadow-xl flex items-center justify-center hover:bg-brand-hover transition-colors focus:outline-none"
-          >
-            <MessageCircle size={32} />
-          </motion.button>
+          <div className="relative">
+            {/* Anillo de pulso exterior */}
+            <motion.div
+              className="absolute inset-0 rounded-full bg-brand-action opacity-30"
+              animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            />
+            {/* Tooltip de bienvenida */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 2, duration: 0.5 }}
+              className="absolute right-20 top-1/2 -translate-y-1/2 bg-white px-4 py-2 rounded-xl shadow-lg border border-gray-100 whitespace-nowrap text-brand-dark font-medium text-sm hidden sm:block"
+            >
+              ¡Hola! ¿En qué puedo ayudarte hoy? 💬
+              <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rotate-45 border-r border-t border-gray-100" />
+            </motion.div>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(true)}
+              className="relative w-16 h-16 rounded-full bg-brand-action text-white shadow-xl flex items-center justify-center hover:bg-brand-hover transition-colors focus:outline-none z-10 overflow-hidden"
+            >
+              {/* SVG de Robot IA amigable */}
+              <svg 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className="w-10 h-10"
+              >
+                <path d="M12 8V4H8" />
+                <rect width="16" height="12" x="4" y="8" rx="2" />
+                <path d="M2 14h2" />
+                <path d="M20 14h2" />
+                <path d="M15 13v2" />
+                <path d="M9 13v2" />
+              </svg>
+              
+              {/* Indicador de micrófono pequeño flotante */}
+              <div className="absolute bottom-2 right-2 bg-white text-brand-action p-1 rounded-full shadow-sm border border-gray-100 flex items-center justify-center">
+                <Mic size={12} fill="currentColor" />
+              </div>
+            </motion.button>
+          </div>
         )}
       </AnimatePresence>
 
@@ -85,17 +125,6 @@ export const GeminiLiveWidget: React.FC = () => {
                 </div>
               </div>
               <div className="flex space-x-1 items-center">
-                <button
-                  type="button"
-                  onClick={toggleVoice}
-                  title={isVoiceActive ? "Desactivar Voz" : "Hablar por voz (Live)"}
-                  className={`p-1.5 rounded-full text-white transition-all mr-1 ${
-                    isVoiceActive ? 'bg-red-500 hover:bg-red-600 animate-pulse' : 'hover:bg-white/10'
-                  }`}
-                >
-                  {isVoiceActive ? <MicOff size={18} /> : <Mic size={18} />}
-                </button>
-                <div className="w-px h-4 bg-gray-500/50 mx-1"></div>
                 <button 
                   onClick={clearChat} 
                   title="Nueva Conversación"
@@ -153,6 +182,51 @@ export const GeminiLiveWidget: React.FC = () => {
                     </span>
                   </div>
               )}
+              {/* Botón Flotante de Voz dentro del chat */}
+              <div className="absolute bottom-20 right-4 z-20 flex flex-col items-end space-y-2 pointer-events-none">
+                <AnimatePresence>
+                  {!isVoiceActive && inputText.length === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      className="bg-brand-action text-white px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-lg uppercase tracking-wider mb-1 mr-2"
+                    >
+                      Hablemos por voz 🎙️
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  type="button"
+                  onClick={toggleVoice}
+                  className={`p-3 rounded-full text-white shadow-xl pointer-events-auto flex items-center justify-center border-2 border-white ${
+                    isVoiceActive ? 'bg-red-500 animate-pulse' : 'bg-brand-action hover:bg-brand-hover'
+                  }`}
+                >
+                  {isVoiceActive ? (
+                    <MicOff size={24} />
+                  ) : (
+                    <svg 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2.5" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      className="w-7 h-7"
+                    >
+                      <path d="M12 8V4H8" />
+                      <rect width="16" height="12" x="4" y="8" rx="2" />
+                      <path d="M9 13v2" />
+                      <path d="M15 13v2" />
+                    </svg>
+                  )}
+                </motion.button>
+              </div>
+
               <div ref={messagesEndRef} />
             </div>
 
@@ -164,16 +238,18 @@ export const GeminiLiveWidget: React.FC = () => {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder="Mensaje de texto..."
-                  className="flex-1 border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-brand-action/50 focus:border-brand-action text-sm"
+                  className="flex-1 border border-gray-300 rounded-full py-2.5 px-4 focus:outline-none focus:ring-2 focus:ring-brand-action/50 focus:border-brand-action text-sm"
                 />
                 
                 {inputText.length > 0 && (
-                  <button 
+                  <motion.button 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
                     type="submit"
-                    className="p-2.5 bg-brand-action text-white rounded-full hover:bg-brand-hover transition-colors shrink-0"
+                    className="p-2.5 bg-brand-action text-white rounded-full hover:bg-brand-hover transition-colors shrink-0 shadow-md"
                   >
                     <Send size={18} />
-                  </button>
+                  </motion.button>
                 )}
               </form>
             </div>

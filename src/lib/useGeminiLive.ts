@@ -341,7 +341,7 @@ export function useGeminiLive() {
       let maxIterations = 5;
       while (maxIterations-- > 0) {
         const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -402,24 +402,17 @@ export function useGeminiLive() {
   const sendTextMessage = useCallback((text: string) => {
     const userMsg: Message = { id: crypto.randomUUID(), role: 'user', text };
     
-    // Important: DO NOT trigger side-effects inside setMessages setState updater (React Strict Mode runs it twice)
-    setMessages(prev => {
-      // Create the new state
-      const next = [...prev, userMsg];
-      
-      // Delay the side effect slightly to ensure it runs OUTSIDE the React render phase lock
-      // and only once. Actually better: use the `prev` state to call sendRESTMessage
-      setTimeout(() => {
-        if (wsRef.current?.readyState === WebSocket.OPEN) {
-          wsRef.current.send(JSON.stringify({ realtimeInput: { text } }));
-        } else {
-          sendRESTMessage(text, prev);
-        }
-      }, 0);
-      
-      return next;
-    });
-  }, [sendRESTMessage]);
+    // Side effects should NEVER be inside setMessages updater.
+    // Use the messages from the scope to send the request.
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ realtimeInput: { text } }));
+    } else {
+      sendRESTMessage(text, messages);
+    }
+    
+    // Pure state update
+    setMessages(prev => [...prev, userMsg]);
+  }, [messages, sendRESTMessage]);
 
   const clearChat = useCallback(() => {
     setMessages([]);
