@@ -7,6 +7,8 @@ import LegalPage from './pages/LegalPage';
 
 import ScrollToTop from './components/ScrollToTop';
 
+import { GeminiLiveWidget } from './components/GeminiLiveWidget';
+
 function App() {
   return (
     <Router>
@@ -18,6 +20,8 @@ function App() {
         <Route path="/legal" element={<Legal />} />
         <Route path="/legal/:slug" element={<LegalPage />} />
       </Routes>
+      {/* Widget Global Chat Inteligente */}
+      <GeminiLiveWidget />
     </Router>
   );
 }

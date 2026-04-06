@@ -1,0 +1,340 @@
+{
+  "name": "List Tickets Api",
+  "description": "get:\nListado de tickets de soporte técnico.\n\nConsulta la lista de tickets de soporte técnico.\n\n---\n\nEl resultado se devuelve con paginación y puede utilizar los query parameter `limit` y `offset`\n - `limit` Es un número entero que indica el número máximo de elementos a devolver y es equivalente al tamaño de\n   la página.\n - `offset` Es un número entero que indica la posición inicial de la consulta.",
+  "renders": [
+    "application/json"
+  ],
+  "parses": [
+    "application/json",
+    "multipart/form-data"
+  ],
+  "actions": {
+    "POST": {
+      "id_ticket": {
+        "type": "integer",
+        "required": false,
+        "read_only": false,
+        "label": "Id ticket",
+        "min_value": 0,
+        "max_value": 4294967295
+      },
+      "asunto": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Asunto",
+        "max_length": 120
+      },
+      "razon_falla": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Razon falla"
+      },
+      "fecha_inicio": {
+        "type": "datetime",
+        "required": true,
+        "read_only": false,
+        "label": "Fecha inicio"
+      },
+      "fecha_fin": {
+        "type": "field",
+        "required": false,
+        "read_only": true,
+        "label": "Fecha fin"
+      },
+      "fecha_estimada_inicio": {
+        "type": "datetime",
+        "required": true,
+        "read_only": false,
+        "label": "Fecha estimada inicio"
+      },
+      "fecha_estimada_fin": {
+        "type": "datetime",
+        "required": true,
+        "read_only": false,
+        "label": "Fecha estimada fin"
+      },
+      "fecha_creacion": {
+        "type": "datetime",
+        "required": false,
+        "read_only": true,
+        "label": "Fecha creacion"
+      },
+      "creado_por": {
+        "type": "field",
+        "required": false,
+        "read_only": true,
+        "label": "Creado por"
+      },
+      "finalizado_por": {
+        "type": "field",
+        "required": false,
+        "read_only": true,
+        "label": "Finalizado por"
+      },
+      "estado": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Estado"
+      },
+      "prioridad": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Prioridad"
+      },
+      "tecnico": {
+        "type": "field",
+        "required": false,
+        "read_only": true,
+        "label": "Tecnico"
+      },
+      "email_tecnico": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Email Tecnico",
+        "max_length": 100
+      },
+      "departamento": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Departamento",
+        "max_length": 120
+      },
+      "origen_reporte": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Origen reporte"
+      },
+      "descripcion": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Descripcion"
+      },
+      "servicio": {
+        "type": "nested object",
+        "required": true,
+        "read_only": false,
+        "label": "Servicio",
+        "children": {
+          "id_servicio": {
+            "type": "integer",
+            "required": false,
+            "read_only": false,
+            "label": "Id servicio",
+            "min_value": 0,
+            "max_value": 4294967295
+          },
+          "nombre": {
+            "type": "string",
+            "required": true,
+            "read_only": false,
+            "label": "Nombre"
+          },
+          "email": {
+            "type": "email",
+            "required": true,
+            "read_only": false,
+            "label": "Email"
+          },
+          "cedula": {
+            "type": "string",
+            "required": true,
+            "read_only": false,
+            "label": "Cedula"
+          },
+          "direccion": {
+            "type": "string",
+            "required": true,
+            "read_only": false,
+            "label": "Direccion"
+          },
+          "localidad": {
+            "type": "string",
+            "required": true,
+            "read_only": false,
+            "label": "Localidad"
+          },
+          "telefono": {
+            "type": "string",
+            "required": true,
+            "read_only": false,
+            "label": "Telefono"
+          },
+          "rfc": {
+            "type": "string",
+            "required": true,
+            "read_only": false,
+            "label": "Rfc"
+          },
+          "ip": {
+            "type": "string",
+            "required": true,
+            "read_only": false,
+            "label": "IP",
+            "max_length": 50
+          },
+          "comentarios": {
+            "type": "string",
+            "required": false,
+            "read_only": false,
+            "label": "Comentarios"
+          },
+          "fecha_instalacion": {
+            "type": "datetime",
+            "required": true,
+            "read_only": false,
+            "label": "Fecha instalacion"
+          },
+          "plan_internet": {
+            "type": "nested object",
+            "required": true,
+            "read_only": false,
+            "label": "Plan internet",
+            "children": {
+              "id": {
+                "type": "integer",
+                "required": false,
+                "read_only": false,
+                "label": "Id"
+              },
+              "nombre": {
+                "type": "string",
+                "required": false,
+                "read_only": true,
+                "label": "Nombre"
+              }
+            }
+          },
+          "zona": {
+            "type": "nested object",
+            "required": true,
+            "read_only": false,
+            "label": "Zona",
+            "children": {
+              "id": {
+                "type": "integer",
+                "required": false,
+                "read_only": false,
+                "label": "Id"
+              },
+              "nombre": {
+                "type": "string",
+                "required": false,
+                "read_only": true,
+                "label": "Nombre"
+              }
+            }
+          },
+          "router": {
+            "type": "nested object",
+            "required": true,
+            "read_only": false,
+            "label": "Router",
+            "children": {
+              "id": {
+                "type": "integer",
+                "required": false,
+                "read_only": true,
+                "label": "ID"
+              },
+              "nombre": {
+                "type": "string",
+                "required": true,
+                "read_only": false,
+                "label": "Nombre",
+                "max_length": 100
+              },
+              "falla_general": {
+                "type": "boolean",
+                "required": false,
+                "read_only": false,
+                "label": "Falla general"
+              },
+              "falla_general_descripcion": {
+                "type": "string",
+                "required": false,
+                "read_only": false,
+                "label": "Falla general descripcion"
+              }
+            }
+          },
+          "sectorial": {
+            "type": "nested object",
+            "required": true,
+            "read_only": false,
+            "label": "Sectorial",
+            "children": {
+              "id": {
+                "type": "integer",
+                "required": false,
+                "read_only": false,
+                "label": "Id"
+              },
+              "nombre": {
+                "type": "string",
+                "required": false,
+                "read_only": true,
+                "label": "Nombre"
+              },
+              "falla_general": {
+                "type": "boolean",
+                "required": false,
+                "read_only": false,
+                "label": "Falla General"
+              },
+              "falla_general_descripcion": {
+                "type": "string",
+                "required": false,
+                "read_only": false,
+                "label": "Descripcion"
+              }
+            }
+          }
+        }
+      },
+      "tickets_mensual": {
+        "type": "integer",
+        "required": false,
+        "read_only": false,
+        "label": "Tickets mensual",
+        "min_value": 0,
+        "max_value": 4294967295
+      },
+      "tickets_anual": {
+        "type": "integer",
+        "required": false,
+        "read_only": false,
+        "label": "Tickets anual",
+        "min_value": 0,
+        "max_value": 4294967295
+      },
+      "vencimiento": {
+        "type": "choice",
+        "required": false,
+        "read_only": false,
+        "label": "Vencimiento",
+        "choices": [
+          {
+            "display_name": "Vencido",
+            "value": 0
+          },
+          {
+            "display_name": "A tiempo",
+            "value": 1
+          },
+          {
+            "display_name": "Por vencer",
+            "value": 2
+          }
+        ]
+      }
+    }
+  }
+}
