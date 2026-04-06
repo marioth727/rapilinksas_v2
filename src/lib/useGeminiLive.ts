@@ -317,7 +317,7 @@ export function useGeminiLive() {
   }, [connect, startVoice, stopVoice, disconnect, getOrCreatePlayer, sendTurnComplete]);
 
   // ------------------------------------------------------------------
-  // CHAT DE TEXTO (REST con gemini-1.5-flash + Function Calling)
+  // CHAT DE TEXTO (REST con gemini-2.0-flash-lite + Function Calling)
   // ------------------------------------------------------------------
   const sendRESTMessage = useCallback(async (text: string, history: Message[]) => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -343,7 +343,7 @@ export function useGeminiLive() {
       let maxIterations = 5;
       while (maxIterations-- > 0) {
         const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
 
           {
             method: 'POST',
