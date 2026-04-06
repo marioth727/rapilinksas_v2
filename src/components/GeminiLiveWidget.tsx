@@ -12,6 +12,7 @@ export const GeminiLiveWidget: React.FC = () => {
     messages,
     isConnected,
     isVoiceActive,
+    isTextLoading,
     connect,
     disconnect,
     toggleVoice,
@@ -32,7 +33,7 @@ export const GeminiLiveWidget: React.FC = () => {
 
   const handleSendText = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || isTextLoading) return;
     sendTextMessage(inputText);
     setInputText("");
   };
@@ -182,6 +183,34 @@ export const GeminiLiveWidget: React.FC = () => {
                     </span>
                   </div>
               )}
+              {/* Burbuja "Camilo está escribiendo..." */}
+              {isTextLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-white text-gray-500 shadow-sm border border-gray-100 rounded-2xl rounded-bl-none px-4 py-3 text-sm flex items-center gap-2">
+                    <motion.span
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+                    >
+                      Camilo está escribiendo
+                    </motion.span>
+                    <div className="flex gap-0.5 items-end h-3">
+                      {[0, 0.2, 0.4].map((delay, i) => (
+                        <motion.div
+                          key={i}
+                          className="w-1 h-1 bg-brand-action rounded-full"
+                          animate={{ y: [0, -4, 0] }}
+                          transition={{ repeat: Infinity, duration: 0.7, delay, ease: 'easeInOut' }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
               {/* Botón Flotante de Voz dentro del chat */}
               <div className="absolute bottom-20 right-4 z-20 flex flex-col items-end space-y-2 pointer-events-none">
                 <AnimatePresence>
@@ -230,18 +259,20 @@ export const GeminiLiveWidget: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
             <div className="p-3 bg-white border-t border-gray-200">
               <form onSubmit={handleSendText} className="flex relative items-center space-x-2">
                 <input
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Mensaje de texto..."
-                  className="flex-1 border border-gray-300 rounded-full py-2.5 px-4 focus:outline-none focus:ring-2 focus:ring-brand-action/50 focus:border-brand-action text-sm"
+                  placeholder={isTextLoading ? "Camilo está respondiendo..." : "Mensaje de texto..."}
+                  disabled={isTextLoading}
+                  className={`flex-1 border rounded-full py-2.5 px-4 focus:outline-none focus:ring-2 focus:ring-brand-action/50 focus:border-brand-action text-sm transition-colors ${
+                    isTextLoading ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed' : 'border-gray-300'
+                  }`}
                 />
                 
-                {inputText.length > 0 && (
+                {inputText.length > 0 && !isTextLoading && (
                   <motion.button 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -250,6 +281,16 @@ export const GeminiLiveWidget: React.FC = () => {
                   >
                     <Send size={18} />
                   </motion.button>
+                )}
+                {isTextLoading && (
+                  <div className="p-2.5 bg-gray-200 text-gray-400 rounded-full shrink-0">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                    >
+                      <RefreshCw size={18} />
+                    </motion.div>
+                  </div>
                 )}
               </form>
             </div>

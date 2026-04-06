@@ -16,6 +16,7 @@ export function useGeminiLive() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const [isTextLoading, setIsTextLoading] = useState(false);
   
   const wsRef = useRef<WebSocket | null>(null);
   const audioRecorderRef = useRef<AudioRecorder | null>(null);
@@ -316,13 +317,13 @@ export function useGeminiLive() {
   }, [connect, startVoice, stopVoice, disconnect, getOrCreatePlayer, sendTurnComplete]);
 
   // ------------------------------------------------------------------
-  // CHAT DE TEXTO (REST con gemini-2.5-flash + Function Calling)
+  // CHAT DE TEXTO (REST con gemini-1.5-flash + Function Calling)
   // ------------------------------------------------------------------
   const sendRESTMessage = useCallback(async (text: string, history: Message[]) => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) return;
 
-    const sysPrompt = import.meta.env.VITE_GEMINI_SYSTEM_PROMPT || "Eres un asistente virtual de Rapilink.";
+    const sysPrompt = systemPromptText || "Eres un asistente virtual de Rapilink.";
     
     // Construir historial para la API
     const buildContents = (msgs: Message[], userText: string) => {
@@ -335,13 +336,15 @@ export function useGeminiLive() {
     };
 
     let contents = buildContents(history, text);
+    setIsTextLoading(true);
 
     try {
       // Ciclo para manejar múltiples rondas de Function Calling
       let maxIterations = 5;
       while (maxIterations-- > 0) {
         const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -354,6 +357,16 @@ export function useGeminiLive() {
         );
 
         const data = await res.json();
+
+        // Manejo de errores HTTP (429, 500, etc.) — fetch NO lanza excepciones para estos
+        if (!res.ok) {
+          const errMsg = res.status === 429
+            ? 'Estoy recibiendo muchas consultas a la vez. ¡Dame 10 segundos y vuelve a intentarlo! 🙏'
+            : `Error del servidor (${res.status}). Por favor intenta de nuevo.`;
+          setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'model', text: errMsg }]);
+          break;
+        }
+
         const candidate = data.candidates?.[0];
         if (!candidate) break;
 
@@ -394,8 +407,19 @@ export function useGeminiLive() {
         }
         break; // Salir del ciclo si no hay más function calls
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("[REST] Error:", e);
+      // Manejo de error 429: informar al usuario de forma amigable
+      const status = e?.status || 0;
+      const errMsg = status === 429
+        ? 'Estoy recibiendo muchas consultas a la vez. ¡Dame 10 segundos y vuelve a intentarlo! 🙏'
+        : 'Tuve un problema al conectarme. Por favor intenta de nuevo.';
+      setMessages(prev => [
+        ...prev,
+        { id: crypto.randomUUID(), role: 'model', text: errMsg }
+      ]);
+    } finally {
+      setIsTextLoading(false);
     }
   }, []);
 
@@ -423,6 +447,7 @@ export function useGeminiLive() {
     messages,
     isConnected,
     isVoiceActive,
+    isTextLoading,
     connect,
     disconnect,
     toggleVoice,
