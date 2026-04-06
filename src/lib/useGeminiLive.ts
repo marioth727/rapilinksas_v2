@@ -401,13 +401,22 @@ export function useGeminiLive() {
 
   const sendTextMessage = useCallback((text: string) => {
     const userMsg: Message = { id: crypto.randomUUID(), role: 'user', text };
+    
+    // Important: DO NOT trigger side-effects inside setMessages setState updater (React Strict Mode runs it twice)
     setMessages(prev => {
+      // Create the new state
       const next = [...prev, userMsg];
-      if (wsRef.current?.readyState === WebSocket.OPEN) {
-        wsRef.current.send(JSON.stringify({ realtimeInput: { text } }));
-      } else {
-        sendRESTMessage(text, prev);
-      }
+      
+      // Delay the side effect slightly to ensure it runs OUTSIDE the React render phase lock
+      // and only once. Actually better: use the `prev` state to call sendRESTMessage
+      setTimeout(() => {
+        if (wsRef.current?.readyState === WebSocket.OPEN) {
+          wsRef.current.send(JSON.stringify({ realtimeInput: { text } }));
+        } else {
+          sendRESTMessage(text, prev);
+        }
+      }, 0);
+      
       return next;
     });
   }, [sendRESTMessage]);
