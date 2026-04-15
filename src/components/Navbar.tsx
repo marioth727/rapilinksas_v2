@@ -23,6 +23,7 @@ const Navbar: React.FC = () => {
     { name: 'Internet Hogar', href: '/#internet-hogar' },
     { name: 'Televisión', href: '/#tv' },
     { name: 'Empresas', href: '/#empresas' },
+    { name: 'Solicitar', href: '/solicitud' },
     { name: 'PQRS', href: '/pqrs' },
   ];
 

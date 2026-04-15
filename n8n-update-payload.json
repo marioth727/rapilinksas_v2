@@ -1,0 +1,106 @@
+{
+  "name": "Rapilink — Crear Ticket Solicitud Nueva",
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rapilink-solicitud-ticket",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-solicitud",
+      "name": "Webhook Solicitud",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [240, 300],
+      "webhookId": "rapilink-solicitud-ticket"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.body.urlPdf }}",
+        "responseFormat": "file",
+        "outputFieldName": "data",
+        "options": {}
+      },
+      "id": "descargar-pdf",
+      "name": "Descargar PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [480, 300],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.wisphub.io/api/tickets/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Api-Key xlDV3aBg.gQJkVMu0cD0LAeDRUHagcZ3o82pCDjfj"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "servicio",            "value": "3545" },
+            { "name": "asunto",              "value": "Instalacion Nueva" },
+            { "name": "asuntos_default",     "value": "Instalacion Nueva" },
+            { "name": "descripcion",         "value": "={{ $('Webhook Solicitud').item.json.body.descripcion }}" },
+            { "name": "tecnico",             "value": "1408762" },
+            { "name": "email_tecnico",       "value": "info.rapilinksas@gmail.com" },
+            { "name": "estado",              "value": "1" },
+            { "name": "prioridad",           "value": "2" },
+            { "name": "departamento",        "value": "Ventas" },
+            { "name": "departamentos_default","value": "Ventas" },
+            { "name": "origen_reporte",      "value": "portal_cliente" },
+            {
+              "name": "archivo_ticket",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "crear-ticket-nuevo",
+      "name": "Crear Ticket WispHub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [720, 300],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ exito: true, mensaje: 'Ticket creado', ticket: $json }) }}",
+        "options": {}
+      },
+      "id": "resp-ok",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [960, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Solicitud": {
+      "main": [[{ "node": "Descargar PDF", "type": "main", "index": 0 }]]
+    },
+    "Descargar PDF": {
+      "main": [[{ "node": "Crear Ticket WispHub", "type": "main", "index": 0 }]]
+    },
+    "Crear Ticket WispHub": {
+      "main": [[{ "node": "Responder OK", "type": "main", "index": 0 }]]
+    }
+  }
+}

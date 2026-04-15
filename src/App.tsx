@@ -4,6 +4,7 @@ import PQRS from './pages/PQRS';
 import Cobertura from './pages/Cobertura';
 import Legal from './pages/Legal';
 import LegalPage from './pages/LegalPage';
+import Solicitud from './pages/Solicitud';
 
 import ScrollToTop from './components/ScrollToTop';
 
@@ -19,6 +20,7 @@ function App() {
         <Route path="/cobertura" element={<Cobertura />} />
         <Route path="/legal" element={<Legal />} />
         <Route path="/legal/:slug" element={<LegalPage />} />
+        <Route path="/solicitud" element={<Solicitud />} />
       </Routes>
       {/* Widget Global Chat Inteligente */}
       <GeminiLiveWidget />

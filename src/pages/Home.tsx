@@ -63,7 +63,7 @@ const Home: React.FC = () => {
               className="flex flex-col sm:flex-row justify-center gap-4"
             >
               <a href="#internet-hogar" className="btn-primary text-lg px-10 py-4 shadow-xl shadow-brand-action/25">Ver Planes Hogar</a>
-              <a href="#contacto" className="btn-outline text-lg px-10 py-4 !text-white !border-white/40 hover:!bg-white hover:!text-brand-dark transition-all">Contactar Asesor</a>
+              <a href="/solicitud" className="btn-outline text-lg px-10 py-4 !text-white !border-white/40 hover:!bg-white hover:!text-brand-dark transition-all">Solicitar Servicio</a>
             </motion.div>
           </div>
         </div>
