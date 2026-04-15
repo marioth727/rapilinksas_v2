@@ -123,11 +123,18 @@ export async function generateSolicitudPDF(data: SolicitudPDFData): Promise<Blob
     doc.text('Rapilink SAS', MARGIN, 20)
   }
 
-  // Título
+  // Título dinámico según tipo de solicitud
+  const TIPO_LABEL: Record<string, string> = {
+    'Instalacion Nueva':  'SOLICITUD DE INSTALACIÓN NUEVA',
+    'Reconexion':         'SOLICITUD DE RECONEXIÓN',
+    'Cambio De Titular':  'SOLICITUD — CAMBIO DE TITULAR',
+  }
+  const tituloDoc = TIPO_LABEL[data.tipoSolicitud] ?? 'SOLICITUD DE SERVICIO DE INTERNET'
+
   doc.setTextColor(...WHITE)
   doc.setFontSize(13)
   doc.setFont('helvetica', 'bold')
-  doc.text('SOLICITUD DE SERVICIO DE INTERNET', PW - MARGIN, 15, { align: 'right' })
+  doc.text(tituloDoc, PW - MARGIN, 15, { align: 'right' })
   doc.setFontSize(9)
   doc.setFont('helvetica', 'normal')
   doc.text(`N° ${data.solicitudId}  |  ${new Date().toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}`, PW - MARGIN, 22, { align: 'right' })
@@ -304,20 +311,21 @@ export async function generateSolicitudPDF(data: SolicitudPDFData): Promise<Blob
     }
   }
 
-  // Bloque de firma centrado verticalmente junto a la caja (caja: y → y+36, centro: y+18)
+  // Bloque de firma — centrado verticalmente respecto a la caja (y → y+36)
+  // Bloque: línea y+10 … último texto y+22  →  centro visual y+16 ≈ centro de caja y+18
   const lineX = MARGIN + SIG_W + 10
   const lineW = CONTENT_W - SIG_W - 10
   doc.setDrawColor(...BLUE_MID)
   doc.setLineWidth(0.5)
-  doc.line(lineX, y + 12, lineX + lineW, y + 12)
+  doc.line(lineX, y + 10, lineX + lineW, y + 10)
   doc.setTextColor(...GRAY_TEXT)
   doc.setFontSize(7.5)
   doc.setFont('helvetica', 'normal')
-  doc.text('Firma del Solicitante', lineX + lineW / 2, y + 16, { align: 'center' })
+  doc.text('Firma del Solicitante', lineX + lineW / 2, y + 14, { align: 'center' })
   doc.setFont('helvetica', 'bold')
-  doc.text(`${data.nombre} ${data.apellido}`, lineX + lineW / 2, y + 20, { align: 'center' })
+  doc.text(`${data.nombre} ${data.apellido}`, lineX + lineW / 2, y + 18, { align: 'center' })
   doc.setFont('helvetica', 'normal')
-  doc.text(`${data.tipoDoc} ${data.numeroDoc}`, lineX + lineW / 2, y + 24, { align: 'center' })
+  doc.text(`${data.tipoDoc} ${data.numeroDoc}`, lineX + lineW / 2, y + 22, { align: 'center' })
 
   y += SIG_H + 22
 

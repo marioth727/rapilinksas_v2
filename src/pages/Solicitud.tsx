@@ -404,8 +404,8 @@ const Solicitud: React.FC = () => {
       // 1. Subir archivos (atómico)
       const { urls, paths } = await uploadFiles(uuid)
 
-      // 2. Insertar en DB y obtener número secuencial
-      const { data: inserted, error: dbError } = await supabase.from('solicitudes').insert({
+      // 2. Insertar en DB
+      const { error: dbError } = await supabase.from('solicitudes').insert({
         id: uuid,
         nombre: form.nombre.trim(),
         apellido: form.apellido.trim(),
@@ -425,15 +425,17 @@ const Solicitud: React.FC = () => {
         ...urls,
         acepta_centrales_riesgo: form.aceptaCentrales,
         acepta_habeas_data: form.aceptaHabeasData,
-      }).select('numero_solicitud').single()
+      })
 
-      if (dbError || !inserted) {
+      if (dbError) {
         // Rollback archivos
         await supabase.storage.from(BUCKET).remove(paths)
-        throw new Error(`Error guardando solicitud: ${dbError?.message ?? 'sin datos'}`)
+        throw new Error(`Error guardando solicitud: ${dbError.message}`)
       }
 
-      const shortId = String(inserted.numero_solicitud).padStart(6, '0')
+      // Obtener número secuencial vía RPC (evita requerir SELECT en RLS anon)
+      const { data: numeroData } = await supabase.rpc('get_solicitud_numero', { solicitud_id: uuid })
+      const shortId = String(numeroData ?? 0).padStart(6, '0')
 
       // 3. Generar PDF corporativo y subirlo a Storage
       let urlPdf = ''
