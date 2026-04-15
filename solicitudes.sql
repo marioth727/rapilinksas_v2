@@ -83,3 +83,14 @@ ALTER TABLE solicitudes ADD COLUMN IF NOT EXISTS tipo_solicitud TEXT NOT NULL DE
 ALTER TABLE solicitudes ADD COLUMN IF NOT EXISTS plan_interesado TEXT;
 ALTER TABLE solicitudes ADD COLUMN IF NOT EXISTS corte_facturacion TEXT;
 ALTER TABLE solicitudes ADD COLUMN IF NOT EXISTS medio_contacto TEXT;
+
+-- ============================================================
+-- Número de solicitud secuencial (formato 002568, 002569, ...)
+-- ============================================================
+
+-- Crear secuencia empezando en 2568
+CREATE SEQUENCE IF NOT EXISTS solicitudes_numero_seq START WITH 2568;
+
+-- Agregar columna con valor automático de la secuencia
+ALTER TABLE solicitudes
+  ADD COLUMN IF NOT EXISTS numero_solicitud BIGINT DEFAULT nextval('solicitudes_numero_seq');

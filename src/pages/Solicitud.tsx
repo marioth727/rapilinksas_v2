@@ -404,8 +404,8 @@ const Solicitud: React.FC = () => {
       // 1. Subir archivos (atómico)
       const { urls, paths } = await uploadFiles(uuid)
 
-      // 2. Insertar en DB
-      const { error: dbError } = await supabase.from('solicitudes').insert({
+      // 2. Insertar en DB y obtener número secuencial
+      const { data: inserted, error: dbError } = await supabase.from('solicitudes').insert({
         id: uuid,
         nombre: form.nombre.trim(),
         apellido: form.apellido.trim(),
@@ -425,15 +425,15 @@ const Solicitud: React.FC = () => {
         ...urls,
         acepta_centrales_riesgo: form.aceptaCentrales,
         acepta_habeas_data: form.aceptaHabeasData,
-      })
+      }).select('numero_solicitud').single()
 
-      if (dbError) {
+      if (dbError || !inserted) {
         // Rollback archivos
         await supabase.storage.from(BUCKET).remove(paths)
-        throw new Error(`Error guardando solicitud: ${dbError.message}`)
+        throw new Error(`Error guardando solicitud: ${dbError?.message ?? 'sin datos'}`)
       }
 
-      const shortId = uuid.split('-')[0].toUpperCase()
+      const shortId = String(inserted.numero_solicitud).padStart(6, '0')
 
       // 3. Generar PDF corporativo y subirlo a Storage
       let urlPdf = ''
@@ -649,9 +649,9 @@ const Solicitud: React.FC = () => {
                 <Field label="Tipo de solicitud" required error={errors.tipoSolicitud}>
                   <select className={errors.tipoSolicitud ? inputErrorClass : inputClass} value={form.tipoSolicitud} onChange={set('tipoSolicitud')}>
                     <option value="">Selecciona una opción</option>
-                    <option value="Instalación Nueva">Instalación Nueva</option>
-                    <option value="Reconexión">Reconexión</option>
-                    <option value="Cambio de Titular">Cambio de Titular</option>
+                    <option value="Instalacion Nueva">Instalación Nueva</option>
+                    <option value="Reconexion">Reconexión</option>
+                    <option value="Cambio De Titular">Cambio de Titular</option>
                   </select>
                 </Field>
                 <div>
@@ -829,11 +829,11 @@ const Solicitud: React.FC = () => {
                   Enviando solicitud...
                 </>
               ) : (
-                'Enviar mi solicitud de instalación'
+                'Enviar mi solicitud'
               )}
             </button>
             <p className="text-center text-xs text-gray-400 flex items-center justify-center gap-1">
-              <span>🔒</span> Tu información está protegida bajo la Ley 1581 de 2012 · Te contactamos en menos de 24 horas
+              <span>🔒</span> Tu información está protegida bajo la Ley 1581 de 2012 · Te contactamos a la brevedad posible
             </p>
 
           </motion.form>
