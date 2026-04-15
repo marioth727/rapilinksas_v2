@@ -736,6 +736,12 @@ const Solicitud: React.FC = () => {
                     </div>
                   </div>
                 )}
+                <div className="sm:col-span-2 flex items-start gap-2 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3">
+                  <span className="text-amber-500 mt-0.5 shrink-0">⚠</span>
+                  <p className="text-xs text-amber-800 leading-relaxed">
+                    <span className="font-semibold">La ubicación GPS es fundamental</span> para verificar la viabilidad técnica de la instalación. Sin coordenadas precisas no es posible confirmar si el servicio llega a tu dirección.
+                  </p>
+                </div>
               </div>
             </div>
 
