@@ -153,13 +153,20 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({ onSignatureChange, er
 
   const getPos = (e: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect()
+    // El canvas puede estar escalado por CSS (w-full en móvil):
+    // hay que convertir coordenadas CSS → espacio interno del canvas
+    const scaleX = canvas.width  / rect.width
+    const scaleY = canvas.height / rect.height
     if ('touches' in e) {
       return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top,
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top)  * scaleY,
       }
     }
-    return { x: (e as MouseEvent).clientX - rect.left, y: (e as MouseEvent).clientY - rect.top }
+    return {
+      x: ((e as MouseEvent).clientX - rect.left) * scaleX,
+      y: ((e as MouseEvent).clientY - rect.top)  * scaleY,
+    }
   }
 
   const exportBlob = useCallback(() => {
